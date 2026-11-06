@@ -11,6 +11,10 @@ Konsoles un grafiskā lietojumprogramma Python valodā ar SQLite datubāzi, lai 
 - Labojumu kontrole: labojumu kārtu vēsture laika gaitā (revision_logs).
 - Kopsavilkums: izmantotās un atlikušās stundas, nopelnītā summa.
 
+## DB shema
+
+![DB shema](image.png)
+
 ## Tehnoloģijas
 
 - Python 3.x
