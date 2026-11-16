@@ -108,9 +108,15 @@ class Database:
                   (name, (email or "").strip(), rate, client_id))
 
     def list_clients(self, search=""):
-        term = f"%{search.strip()}%"
-        return self._all("SELECT * FROM clients WHERE name LIKE ? OR email LIKE ? ORDER BY name",
-                         (term, term))
+        term = f"%{(search or '').strip()}%"
+        return self._all(
+            """
+            SELECT * FROM clients
+            WHERE name LIKE ? OR COALESCE(email, '') LIKE ?
+            ORDER BY name
+            """,
+            (term, term),
+        )
 
     def delete_client(self, client_id):
         self._run("DELETE FROM clients WHERE id=?", (client_id,))
