@@ -29,21 +29,13 @@ CREATE TABLE IF NOT EXISTS activities (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL UNIQUE
 );
-CREATE TABLE IF NOT EXISTS team_members (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
-    email TEXT UNIQUE,
-    role TEXT,
-    cost_rate REAL
-);
 CREATE TABLE IF NOT EXISTS time_logs (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
     activity_id INTEGER NOT NULL REFERENCES activities(id),
     work_date TEXT NOT NULL,
     hours REAL NOT NULL,
-    note TEXT,
-    member_id INTEGER REFERENCES team_members(id) ON DELETE SET NULL
+    note TEXT
 );
 CREATE TABLE IF NOT EXISTS palette_colors (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -58,33 +50,6 @@ CREATE TABLE IF NOT EXISTS revision_logs (
     round_no INTEGER NOT NULL,
     note TEXT
 );
-CREATE TABLE IF NOT EXISTS invoices (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    client_id INTEGER NOT NULL REFERENCES clients(id),
-    project_id INTEGER REFERENCES projects(id),
-    invoice_no TEXT NOT NULL UNIQUE,
-    status TEXT NOT NULL DEFAULT 'draft',
-    amount REAL NOT NULL,
-    issued_on TEXT,
-    due_on TEXT
-);
-CREATE TABLE IF NOT EXISTS payments (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    invoice_id INTEGER NOT NULL REFERENCES invoices(id),
-    amount REAL NOT NULL,
-    paid_on TEXT NOT NULL,
-    method TEXT,
-    reference TEXT
-);
-CREATE TABLE IF NOT EXISTS expenses (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    project_id INTEGER NOT NULL REFERENCES projects(id),
-    description TEXT NOT NULL,
-    category TEXT,
-    amount REAL NOT NULL,
-    spent_on TEXT NOT NULL,
-    billable INTEGER NOT NULL DEFAULT 0
-);
 """
 
 
@@ -95,22 +60,17 @@ class Database:
         self.connection = sqlite3.connect(path)
         self.connection.row_factory = sqlite3.Row
         self.connection.execute("PRAGMA foreign_keys = ON")
+
+        # Remove unused advanced tables from older databases.
+        for table_name in ("invoices", "payments", "expenses", "project_members"):
+            self.connection.execute(f"DROP TABLE IF EXISTS {table_name}")
+
         self.connection.executescript(SCHEMA)
-        self._migrate_time_logs()
         for activity in ACTIVITIES:
             self.connection.execute(
                 "INSERT OR IGNORE INTO activities (name) VALUES (?)", (activity,)
             )
         self.connection.commit()
-
-    def _migrate_time_logs(self):
-        """Add the optional team-member link to older databases."""
-        columns = {row[1] for row in self.connection.execute("PRAGMA table_info(time_logs)")}
-        if "member_id" not in columns:
-            self.connection.execute(
-                "ALTER TABLE time_logs ADD COLUMN member_id INTEGER "
-                "REFERENCES team_members(id) ON DELETE SET NULL"
-            )
 
     def close(self):
         self.connection.close()
@@ -167,7 +127,7 @@ class Database:
         self._run("DELETE FROM clients WHERE id=?", (client_id,))
 
     def list_projects(self, search=""):
-        term = f"%{search.strip()}%"
+        term = f"%{(search or '').strip()}%"
         return self._all("""
             SELECT p.*, c.name AS client_name, c.hourly_rate,
                    COALESCE((SELECT SUM(hours) FROM time_logs WHERE project_id=p.id), 0) AS spent
@@ -233,7 +193,7 @@ class Database:
                   (project_id, activity_id, work_date or date.today().isoformat(), hours, note.strip()))
 
     def list_time_entries(self, search=""):
-        term = f"%{search.strip()}%"
+        term = f"%{(search or '').strip()}%"
         return self._all("""
             SELECT t.*, p.title AS project_title, a.name AS activity_name
             FROM time_logs t JOIN projects p ON p.id=t.project_id
@@ -246,7 +206,7 @@ class Database:
         self._run("DELETE FROM time_logs WHERE id=?", (time_id,))
 
     def list_colors(self, search=""):
-        term = f"%{search.strip()}%"
+        term = f"%{(search or '').strip()}%"
         return self._all("""
             SELECT color.*, project.title AS project_title
             FROM palette_colors color JOIN projects project ON project.id=color.project_id
