@@ -4,12 +4,20 @@ from tkinter import messagebox, ttk
 
 from database import Database
 
-# Four advanced tables are hidden from the menu; their existing data is preserved.
+# Keep all database tables visible in the menu; this app is a lightweight browser.
 TABLES = {
-    "clients": "Klienti", "projects": "Projekti", "deliverables": "Nodevumi",
-    "activities": "Darbības", "team_members": "Komandas locekļi",
-    "time_logs": "Laika ieraksti", "palette_colors": "Krāsu paletes",
+    "clients": "Klienti",
+    "projects": "Projekti",
+    "deliverables": "Nodevumi",
+    "activities": "Darbības",
+    "team_members": "Komandas locekļi",
+    "time_logs": "Laika ieraksti",
+    "palette_colors": "Krāsu paletes",
     "revision_logs": "Labojumu vēsture",
+    "invoices": "Rēķini",
+    "payments": "Maksājumi",
+    "expenses": "Izdevumi",
+    "project_members": "Projekta komanda",
 }
 
 EXTRA_SCHEMA = """
