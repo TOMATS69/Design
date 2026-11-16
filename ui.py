@@ -4,7 +4,7 @@ from tkinter import messagebox, ttk
 
 from database import Database
 
-# Keep all database tables visible in the menu; this app is a lightweight browser.
+# Keep the app's supported tables visible in the menu.
 TABLES = {
     "clients": "Klienti",
     "projects": "Projekti",
@@ -14,10 +14,6 @@ TABLES = {
     "time_logs": "Laika ieraksti",
     "palette_colors": "Krāsu paletes",
     "revision_logs": "Labojumu vēsture",
-    "invoices": "Rēķini",
-    "payments": "Maksājumi",
-    "expenses": "Izdevumi",
-    "project_members": "Projekta komanda",
 }
 
 EXTRA_SCHEMA = """
@@ -25,13 +21,6 @@ CREATE TABLE IF NOT EXISTS deliverables (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
     name TEXT NOT NULL, format TEXT, done INTEGER NOT NULL DEFAULT 0
-);
-CREATE TABLE IF NOT EXISTS project_members (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-    member_id INTEGER NOT NULL REFERENCES team_members(id) ON DELETE CASCADE,
-    role TEXT, allocation_pct REAL,
-    UNIQUE(project_id, member_id)
 );
 """
 
@@ -192,3 +181,4 @@ class DesignApp(tk.Tk):
     def close(self):
         self.db.close()
         self.destroy()
+
