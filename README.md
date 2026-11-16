@@ -1,23 +1,66 @@
 # Dizaina projektu pārvaldnieks
 
-Vienkārša Python darbvirsmas lietotne dizaina klientu un projektu pārvaldībai. Grafiskajā lietotnē ievades lauki atrodas virs tabulas.
+Vienkārša Python darbvirsmas lietotne dizaina klientu, projektu un saistīto datu pārvaldībai. Lietotne izmanto Tkinter grafiskajam interfeisam un SQLite datu glabāšanai. Saskarne pieejama latviešu valodā.
 
-## Palaide
+## Iespējas
 
-Nepieciešams Python 3 ar Tkinter un SQLite (parasti iekļauti Python instalācijā).
+- Pārskatīt un pārvaldīt klientus un projektus.
+- Pārvaldīt nodevumus, darbības, komandas locekļus, laika ierakstus, krāsu paletes un labojumu vēsturi.
+- Pievienot, labot un dzēst ierakstus grafiskajā saskarnē.
+- Meklēt sadaļas un filtrēt tabulas ierakstus.
+- Saglabāt datus lokālā SQLite datubāzē.
+
+## Prasības
+
+- Python 3
+- Tkinter
+- SQLite
+
+Tkinter un SQLite parasti ir iekļauti Python instalācijā. Linux sistēmā, ja Tkinter nav pieejams, instalējiet to, piemēram, ar:
 
 ```bash
-python main.py
+sudo apt install python3-tk
 ```
 
-Linux sistēmā, ja Tkinter nav pieejams, instalē to ar `sudo apt install python3-tk`.
+## Instalēšana un palaišana
 
-## Faili
+1. Klonējiet repozitoriju:
+
+   ```bash
+   git clone https://github.com/TOMATS69/Design.git
+   cd Design
+   ```
+
+2. Palaidiet grafisko lietotni:
+
+   ```bash
+   python main.py
+   ```
+
+Nav nepieciešams instalēt papildu Python pakotnes.
+
+## Lietošana
+
+Lietotnes kreisajā izvēlnē izvēlieties sadaļu. Izmantojiet ievades laukus, lai pievienotu vai labotu ierakstu, un darbību pogas, lai saglabātu izmaiņas, dzēstu vai notīrītu laukus. Tabulas meklēšanas lauks ļauj ātri atrast ierakstus.
+
+Palaižot lietotni, projekta mapē automātiski tiek izveidots `design_tracker.db` SQLite datubāzes fails.
+
+## Projekta faili
 
 - `main.py` — palaiž grafisko lietotni.
-- `ui.py` — Tkinter logi, formas un tabulas.
-- `database.py` — SQLite datubāze, ievades pārbaude un datu saglabāšana.
-- `schema.sql` — datubāzes tabulu shēma.
-- `terminal.py` — vienkāršā komandrindas versija.
+- `ui.py` — Tkinter saskarne un lietotāja darbības.
+- `database.py` — SQLite datubāzes piekļuve un datu loģika.
+- `schema.sql` — datubāzes shēma.
+- `terminal.py` — komandrindas versijas palaišanas fails.
 
-Datubāzes fails `design_tracker.db` tiek izveidots automātiski projekta mapē.
+## Ieguldījumi
+
+Ieteikumus un kļūdu ziņojumus var iesniegt GitHub repozitorija [Issues](https://github.com/TOMATS69/Design/issues) sadaļā. Koda izmaiņām izveidojiet atsevišķu atzaru un iesniedziet pull request ar īsu izmaiņu aprakstu.
+
+## Licence
+
+Šobrīd repozitorijā nav norādīts licences fails. Pirms koda izmantošanas vai izplatīšanas pārbaudiet ar autoru, kādi lietošanas nosacījumi ir spēkā.
+
+## Kontakti
+
+Jautājumiem vai ieteikumiem sazinieties ar repozitorija uzturētāju, izmantojot GitHub profilu [@TOMATS69](https://github.com/TOMATS69).
