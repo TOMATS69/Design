@@ -1,20 +1,17 @@
-"""Simple database browser: view and edit every app table from the menu."""
+"""Simple database browser: view and edit app tables from the menu."""
 import tkinter as tk
 from tkinter import messagebox, ttk
 
 from database import Database
 
-# Tables are fixed here so SQL identifiers always come from a trusted list.
+# Four advanced tables are hidden from the menu; their existing data is preserved.
 TABLES = {
     "clients": "Klienti", "projects": "Projekti", "deliverables": "Nodevumi",
     "activities": "Darbības", "team_members": "Komandas locekļi",
     "time_logs": "Laika ieraksti", "palette_colors": "Krāsu paletes",
-    "revision_logs": "Labojumu vēsture", "invoices": "Rēķini",
-    "payments": "Maksājumi", "expenses": "Izdevumi",
-    "project_members": "Projekta komanda",
+    "revision_logs": "Labojumu vēsture",
 }
 
-# Add the two tables from schema.sql that older database.py versions may not create.
 EXTRA_SCHEMA = """
 CREATE TABLE IF NOT EXISTS deliverables (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -40,8 +37,7 @@ class DesignApp(tk.Tk):
         self.db = Database()
         self.db.connection.executescript(EXTRA_SCHEMA)
         self.db.connection.commit()
-        self.table_name = None
-        self.columns = []
+        self.table_name, self.columns = None, []
 
         ttk.Label(self, text="Dizaina projektu pārvaldnieks",
                   font=("TkDefaultFont", 18, "bold")).pack(anchor="w", padx=14, pady=10)
@@ -60,9 +56,8 @@ class DesignApp(tk.Tk):
         self.title_label = ttk.Label(self.page, text="Izvēlies tabulu kreisajā izvēlnē",
                                      font=("TkDefaultFont", 13, "bold"))
         self.title_label.pack(anchor="w", pady=(0, 8))
-        form = ttk.LabelFrame(self.page, text="Ieraksta dati", padding=8)
-        form.pack(fill="x", pady=(0, 8))
-        self.form = form
+        self.form = ttk.LabelFrame(self.page, text="Ieraksta dati", padding=8)
+        self.form.pack(fill="x", pady=(0, 8))
         self.entries = {}
         buttons = ttk.Frame(self.page)
         buttons.pack(fill="x", pady=(0, 8))
@@ -91,12 +86,10 @@ class DesignApp(tk.Tk):
         info = self.db.connection.execute(f"PRAGMA table_info({self.table_name})").fetchall()
         self.columns = [row[1] for row in info]
         primary_keys = {row[1] for row in info if row[5]}
-
         for widget in self.form.winfo_children():
             widget.destroy()
         self.entries.clear()
-        editable = [column for column in self.columns if column not in primary_keys]
-        for index, column in enumerate(editable):
+        for index, column in enumerate(c for c in self.columns if c not in primary_keys):
             line = ttk.Frame(self.form)
             line.grid(row=index // 4, column=index % 4, sticky="ew", padx=4, pady=3)
             ttk.Label(line, text=column).pack(anchor="w")
@@ -105,7 +98,6 @@ class DesignApp(tk.Tk):
             self.entries[column] = entry
         for column in range(4):
             self.form.columnconfigure(column, weight=1)
-
         self.tree["columns"] = self.columns
         for column in self.columns:
             self.tree.heading(column, text=column)
@@ -125,13 +117,12 @@ class DesignApp(tk.Tk):
                              values=[row[column] for column in self.columns])
 
     def values(self, for_update=False):
-        values = {}
+        result = {}
         for column, entry in self.entries.items():
             text = entry.get().strip()
-            # Empty values are omitted on insert to preserve SQL defaults.
             if text or for_update:
-                values[column] = text if text else None
-        return values
+                result[column] = text or None
+        return result
 
     def run_sql(self, sql, values):
         try:
