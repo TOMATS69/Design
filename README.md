@@ -1,14 +1,14 @@
 # Dizaina projektu pārvaldnieks
 
-Vienkārša Python darbvirsmas lietotne dizaina klientu, projektu un saistīto datu pārvaldībai. Lietotne izmanto Tkinter grafiskajam interfeisam un SQLite datu glabāšanai. Saskarne pieejama latviešu valodā.
+Python darbvirsmas lietotne dizaina klientu un projektu informācijas pārvaldībai. Lietotne izmanto **Tkinter** grafiskajai saskarnei un **SQLite** lokālai datu glabāšanai.
 
 ## Iespējas
 
-- Pārskatīt un pārvaldīt klientus un projektus.
-- Pārvaldīt nodevumus, darbības, komandas locekļus, laika ierakstus, krāsu paletes un labojumu vēsturi.
+- Pārvaldīt klientus un projektus.
+- Pārskatīt un rediģēt ar projektiem saistītos datus: nodevumus, darbības, komandas locekļus, laika ierakstus, krāsu paletes un labojumu vēsturi.
 - Pievienot, labot un dzēst ierakstus grafiskajā saskarnē.
 - Meklēt sadaļas un filtrēt tabulas ierakstus.
-- Saglabāt datus lokālā SQLite datubāzē.
+- Glabāt datus lokālā SQLite datubāzē.
 
 ## Prasības
 
@@ -22,44 +22,57 @@ Tkinter un SQLite parasti ir iekļauti Python instalācijā. Linux sistēmā, ja
 sudo apt install python3-tk
 ```
 
-## Instalēšana un palaišana
+## Instalēšana
 
 1. Klonējiet repozitoriju:
 
    ```bash
    git clone https://github.com/TOMATS69/Design.git
+   ```
+
+2. Atveriet projekta mapi:
+
+   ```bash
    cd Design
    ```
 
-2. Palaidiet grafisko lietotni:
+3. Palaidiet lietotni:
 
    ```bash
    python main.py
    ```
 
-Nav nepieciešams instalēt papildu Python pakotnes.
+Papildu Python pakotnes nav nepieciešamas.
 
 ## Lietošana
 
-Lietotnes kreisajā izvēlnē izvēlieties sadaļu. Izmantojiet ievades laukus, lai pievienotu vai labotu ierakstu, un darbību pogas, lai saglabātu izmaiņas, dzēstu vai notīrītu laukus. Tabulas meklēšanas lauks ļauj ātri atrast ierakstus.
+Lietotnes kreisajā izvēlnē izvēlieties datu sadaļu. Lai pievienotu ierakstu, aizpildiet laukus un nospiediet **Pievienot ierakstu**. Lai labotu vai dzēstu ierakstu, vispirms izvēlieties to tabulā. Izmantojiet meklēšanas lauku, lai filtrētu attēlotos ierakstus.
 
-Palaižot lietotni, projekta mapē automātiski tiek izveidots `design_tracker.db` SQLite datubāzes fails.
+Datubāzes fails `design_tracker.db` tiek izveidots automātiski projekta mapē, palaižot lietotni.
 
-## Projekta faili
+## Projekta struktūra
 
-- `main.py` — palaiž grafisko lietotni.
-- `ui.py` — Tkinter saskarne un lietotāja darbības.
-- `database.py` — SQLite datubāzes piekļuve un datu loģika.
-- `schema.sql` — datubāzes shēma.
-- `terminal.py` — komandrindas versijas palaišanas fails.
+| Fails | Apraksts |
+| --- | --- |
+| `main.py` | Palaiž grafisko lietotni. |
+| `ui.py` | Tkinter saskarne un lietotāja darbības. |
+| `database.py` | SQLite datubāzes piekļuve un datu loģika. |
+| `schema.sql` | Datubāzes shēma. |
+| `terminal.py` | Komandrindas versijas palaišanas fails. |
 
 ## Ieguldījumi
 
-Ieteikumus un kļūdu ziņojumus var iesniegt GitHub repozitorija [Issues](https://github.com/TOMATS69/Design/issues) sadaļā. Koda izmaiņām izveidojiet atsevišķu atzaru un iesniedziet pull request ar īsu izmaiņu aprakstu.
+Ieteikumus un kļūdu ziņojumus var iesniegt [GitHub Issues](https://github.com/TOMATS69/Design/issues) sadaļā. Koda izmaiņām izveidojiet atsevišķu atzaru un iesniedziet pull request ar īsu izmaiņu aprakstu.
+
+Pirms iesniegšanas pārliecinieties, ka:
+
+- [ ] Lietotne palaižas ar `python main.py`.
+- [ ] Izmaiņas ir pārbaudītas attiecīgajās lietotnes sadaļās.
+- [ ] Pull request apraksta izmaiņas un to mērķi.
 
 ## Licence
 
-Šobrīd repozitorijā nav norādīts licences fails. Pirms koda izmantošanas vai izplatīšanas pārbaudiet ar autoru, kādi lietošanas nosacījumi ir spēkā.
+Šobrīd repozitorijā nav norādīts licences fails. Pirms koda izmantošanas, pārveidošanas vai izplatīšanas sazinieties ar autoru, lai noskaidrotu lietošanas nosacījumus.
 
 ## Kontakti
 
